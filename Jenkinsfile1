@@ -1,0 +1,52 @@
+ pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out the code...'
+                git branch: 'main', url: 'https://github.com/Bleccin/Jenkins-SCM.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Installing dependencies...'
+                sh 'npm install' // For Node.js projects, "npm install" installs dependencies.
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                echo 'Building the application...'
+                sh 'npm run build' // "npm run build" builds the project if a build script is defined in package.json.
+            }
+        }
+
+        stage('Test Application') {
+            steps {
+                echo 'Running tests...'
+                sh 'npm test' // "npm test" runs tests defined in package.json scripts.
+            }
+        }
+
+        stage('Run Application') {
+            steps {
+                echo 'Starting the application...'
+                sh 'npm start' // "npm start" starts the application using the start script in package.json.
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline succeeded!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
